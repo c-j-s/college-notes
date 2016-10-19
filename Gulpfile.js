@@ -19,6 +19,7 @@ function applyTemplate(templateFile) {
 
 gulp.task('build', function() {
     const mdAdapter = require('gulp-markdown-it-adapter'),
+          frontMatter = require('gulp-front-matter'),
           markdownIt = require('markdown-it')
     const md = new markdownIt('commonmark')
     md.use(require('markdown-it-katex'))
@@ -26,6 +27,10 @@ gulp.task('build', function() {
 
     return gulp
         .src('src/**/*')
+        .pipe(frontMatter({
+            property: 'frontmatter',
+            remove: true
+        }))
         .pipe(mdAdapter(md))
         .pipe(connect.reload())
         .pipe(applyTemplate('template.html'))
